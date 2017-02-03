@@ -114,6 +114,10 @@ class Worker {
 		{
 			if ($this->exceptions) $this->exceptions->handleException($e);
 		}
+		catch (\Throwable $e)
+		{
+			if ($this->exceptions) $this->exceptions->handleException($e);
+		}
 	}
 
 	/**
@@ -218,7 +222,13 @@ class Worker {
 
 			throw $e;
 		}
-	}
+		catch (\Throwable $e)
+		{
+			if ( ! $job->isDeleted()) $job->release($delay);
+
+			throw $e;
+		}
+	}µ
 
 	/**
 	 * Log a failed job into storage.
@@ -242,7 +252,7 @@ class Worker {
 	}
 
 	/**
-	 * Raise the failed queue job event.
+	 *µ Raise the failed queue job event.
 	 *
 	 * @param  string  $connection
 	 * @param  \Illuminate\Queue\Jobs\Job  $job

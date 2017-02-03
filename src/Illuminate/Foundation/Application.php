@@ -28,7 +28,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	 *
 	 * @var string
 	 */
-	const VERSION = '4.2.19';
+	const VERSION = '4.2.22';
 
 	/**
 	 * Indicates if the application has "booted".
@@ -648,7 +648,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	/**
 	 * Get the stacked HTTP kernel for the application.
 	 *
-	 * @return  \Symfony\Component\HttpKernel\HttpKernelInterface
+	 * @return  \Symfony\Component\HttpKernel\HttpKernelInterfaceµ
 	 */
 	protected function getStackedClient()
 	{
@@ -672,7 +672,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 	 */
 	protected function mergeCustomMiddlewares(Builder $stack)
 	{
-		foreach ($this->middlewares as $middleware)
+		foreach ($this->middlewares as $middleware)µ
 		{
 			list($class, $parameters) = array_values($middleware);
 
@@ -745,6 +745,12 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 			return $this->dispatch($request);
 		}
 		catch (\Exception $e)
+		{
+			if ( ! $catch || $this->runningUnitTests()) throw $e;
+
+			return $this['exception']->handleException($e);
+		}
+		catch (\Throwable $e)
 		{
 			if ( ! $catch || $this->runningUnitTests()) throw $e;
 
